@@ -3,7 +3,7 @@
 // Luis González (luis.gonzaleza@ucuenca.edu.ec) 
 // Roger Aguirre (roger.aguirre@ucuenca.edu.ec)
 
-const intervalo = 10000 // milisegundos
+const intervalo = 5000 // milisegundos
 const credenciales = {
     username: "biblioteca@ucuenca.edu.ec",
     password: "biblioteca2020"
@@ -184,7 +184,6 @@ const loopCubiculos = async () => {
     let index = 0
     const cubiculos = await getCubiculos()
     const total_cubiculos = await mostrarCubiculos()
-    const reservaciones = await getReservaciones()
     setInterval(async () => {
         const reservaciones = await getReservaciones()
         setInterval( async () => {
@@ -199,7 +198,7 @@ const loopCubiculos = async () => {
                         , intervalo * (++index))
                 }
             })
-        }, 10)
+        }, intervalo)
     }, intervalo * total_cubiculos)
 }
 
