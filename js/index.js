@@ -3,7 +3,7 @@
 // Luis González (luis.gonzaleza@ucuenca.edu.ec) 
 // Roger Aguirre (roger.aguirre@ucuenca.edu.ec)
 
-const intervalo = 10 // segundos
+const intervalo = 5 // segundos
 const credenciales = {
     username: "biblioteca@ucuenca.edu.ec",
     password: "biblioteca2020"
@@ -84,7 +84,7 @@ const mostrarCubiculos = async () => {
         if (cubiculo.location != null && cubiculo.location.toLowerCase().includes(campus.toLowerCase())) {
             ++index
             cubiculos += `
-                <li id="nombre_cubiculo_${cubiculo.name}">${cubiculo.name}</li>
+                <li name="name_cubiculo" id="nombre_cubiculo_${cubiculo.name}">${cubiculo.name}</li>
 			`;
         }
     });
@@ -169,6 +169,13 @@ const mostrarInfoCubiculos = (cubiculo, data_reservaciones) => {
     return estado
 }
 
+const eliminarFondo = () => {
+    let data = document.getElementsByName("name_cubiculo")
+    for (let index = 0; index < data.length; index++) {
+        data[index].removeAttribute('class')
+    }
+}
+
 const loopCubiculos = async () => {
     const cubiculos = await getCubiculos()
     const total_cubiculos = await mostrarCubiculos()
@@ -176,21 +183,20 @@ const loopCubiculos = async () => {
     const intervalo_ms = intervalo * 1000
     setInterval(async () => {
         const reservaciones = await getReservaciones()
-        setInterval(async () => {
-            cubiculos.resources.map(cubiculo => {
-                if (cubiculo.location != null && cubiculo.location.toLowerCase().includes(campus.toLowerCase())) {
-                    setTimeout(async () => {
-                        mostrarReservaciones(`${cubiculo.name}`, reservaciones)
-                        const estado = mostrarInfoCubiculos(cubiculo, reservaciones)
-                        document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.add(`bg-${estado.toLowerCase()}`)
-                        setTimeout(() => document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.remove(`bg-${estado.toLowerCase()}`), intervalo_ms)
-                        console.log('index', index)
-                    }
-                        , intervalo_ms * (++index))
+        index = 0
+        eliminarFondo()
+        cubiculos.resources.map(cubiculo => {
+            if (cubiculo.location != null && cubiculo.location.toLowerCase().includes(campus.toLowerCase())) {
+                setTimeout(async () => {
+                    mostrarReservaciones(`${cubiculo.name}`, reservaciones)
+                    const estado = mostrarInfoCubiculos(cubiculo, reservaciones)
+                    document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.add(`bg-${estado.toLowerCase()}`)
+                    console.log(intervalo_ms * index)
                 }
-            })
-        }, intervalo_ms)
-    }, intervalo_ms * total_cubiculos)
+                    , intervalo_ms * (++index))
+            }
+        })
+    }, intervalo_ms * (total_cubiculos + 2))
 }
 
 loopCubiculos()
