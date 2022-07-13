@@ -3,7 +3,7 @@
 // Luis González (luis.gonzaleza@ucuenca.edu.ec) 
 // Roger Aguirre (roger.aguirre@ucuenca.edu.ec)
 
-const intervalo = 3000 // milisegundos
+const intervalo = 10000 // milisegundos
 const credenciales = {
     username: "biblioteca@ucuenca.edu.ec",
     password: "biblioteca2020"
@@ -187,10 +187,10 @@ const loopCubiculos = async () => {
     const reservaciones = await getReservaciones()
     setInterval(async () => {
         const reservaciones = await getReservaciones()
-        setInterval(() => {
+        setInterval( async () => {
             cubiculos.resources.map(cubiculo => {
                 if (cubiculo.location != null && cubiculo.location.toLowerCase().includes(campus.toLowerCase())) {
-                    setTimeout(() => {
+                    setTimeout( async () => {
                         mostrarReservaciones(`${cubiculo.name}`, reservaciones)
                         const estado = mostrarInfoCubiculos(cubiculo, reservaciones)
                         document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.add(`bg-${estado.toLowerCase()}`)
@@ -201,18 +201,6 @@ const loopCubiculos = async () => {
             })
         }, 10)
     }, intervalo * total_cubiculos)
-
-    cubiculos.resources.map(cubiculo => {
-        if (cubiculo.location != null && cubiculo.location.toLowerCase().includes(campus.toLowerCase())) {
-            setTimeout(() => {
-                mostrarReservaciones(`${cubiculo.name}`, reservaciones)
-                const estado = mostrarInfoCubiculos(cubiculo, reservaciones)
-                document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.add(`bg-${estado.toLowerCase()}`)
-                setTimeout(() => document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.remove(`bg-${estado.toLowerCase()}`), intervalo)
-            }
-                , intervalo * (++index))
-        }
-    })
 }
 
 loopCubiculos()
