@@ -3,7 +3,7 @@
 // Luis González (luis.gonzaleza@ucuenca.edu.ec) 
 // Roger Aguirre (roger.aguirre@ucuenca.edu.ec)
 
-const intervalo = 5000 // milisegundos
+const intervalo = 10 // segundos
 const credenciales = {
     username: "biblioteca@ucuenca.edu.ec",
     password: "biblioteca2020"
@@ -27,6 +27,7 @@ const autenticarUsusario = async (credenciales) => {
         return data
     } catch (error) {
         console.log(error)
+        window.location.reload()
     }
 }
 
@@ -35,7 +36,7 @@ autenticarUsusario(credenciales)
 const getCubiculos = async () => {
     try {
         console.log("getCubiculos....")
-            const res = await fetch(`${servidor}/booked/Web/Services/index.php/Resources`, {
+        const res = await fetch(`${servidor}/booked/Web/Services/index.php/Resources`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json; charset=UTF-8",
@@ -48,6 +49,7 @@ const getCubiculos = async () => {
         return data
     } catch (error) {
         console.log("Error", error)
+        window.location.reload()
     }
 }
 
@@ -56,7 +58,7 @@ getCubiculos()
 const getReservaciones = async () => {
     try {
         console.log("getReservaciones....")
-            const res = await fetch(`${servidor}/booked/Web/Services/index.php/Reservations`, {
+        const res = await fetch(`${servidor}/booked/Web/Services/index.php/Reservations`, {
             method: "GET",
             headers: {
                 "Content-type": "application/json; charset=UTF-8",
@@ -69,6 +71,7 @@ const getReservaciones = async () => {
         return data
     } catch (error) {
         console.log(error)
+        window.location.reload()
     }
 }
 
@@ -166,40 +169,28 @@ const mostrarInfoCubiculos = (cubiculo, data_reservaciones) => {
     return estado
 }
 
-const cambioDeCubiculo = (cubiculos, reservaciones, index) => {
-    cubiculos.resources.map(cubiculo => {
-        if (cubiculo.location != null && cubiculo.location.toLowerCase().includes(campus.toLowerCase())) {
-            setTimeout(() => {
-                mostrarReservaciones(`${cubiculo.name}`, reservaciones)
-                const estado = mostrarInfoCubiculos(cubiculo, reservaciones)
-                document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.add(`bg-${estado.toLowerCase()}`)
-                setTimeout(() => document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.remove(`bg-${estado.toLowerCase()}`), intervalo)
-            }
-                , intervalo * (++index))
-        }
-    })
-}
-
 const loopCubiculos = async () => {
-    let index = 0
     const cubiculos = await getCubiculos()
     const total_cubiculos = await mostrarCubiculos()
+    let index = 0
+    const intervalo_ms = intervalo * 1000
     setInterval(async () => {
         const reservaciones = await getReservaciones()
-        setInterval( async () => {
+        setInterval(async () => {
             cubiculos.resources.map(cubiculo => {
                 if (cubiculo.location != null && cubiculo.location.toLowerCase().includes(campus.toLowerCase())) {
-                    setTimeout( async () => {
+                    setTimeout(async () => {
                         mostrarReservaciones(`${cubiculo.name}`, reservaciones)
                         const estado = mostrarInfoCubiculos(cubiculo, reservaciones)
                         document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.add(`bg-${estado.toLowerCase()}`)
-                        setTimeout(() => document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.remove(`bg-${estado.toLowerCase()}`), intervalo)
+                        setTimeout(() => document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.remove(`bg-${estado.toLowerCase()}`), intervalo_ms)
+                        console.log('index', index)
                     }
-                        , intervalo * (++index))
+                        , intervalo_ms * (++index))
                 }
             })
-        }, intervalo)
-    }, intervalo * total_cubiculos)
+        }, intervalo_ms)
+    }, intervalo_ms * total_cubiculos)
 }
 
 loopCubiculos()

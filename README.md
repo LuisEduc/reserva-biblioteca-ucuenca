@@ -7,10 +7,10 @@ __Creado por:__ Luis González (luis.gonzaleza@ucuenca.edu.ec) y Roger Aguirre (
 Configuración en el archivo `index.js`
 
 ## Intervalo
-Se define el intervalo de tiempo __(en milisegundos)__ de visualización de la información de cada cubículo.  
+Se define el intervalo de tiempo __(en segundos)__ de visualización de la información de cada cubículo.  
 
 ```js
-const intervalo = 5000 // 5 segundos
+const intervalo = 5 // 5 segundos
 ```
 
 ## Credenciales
