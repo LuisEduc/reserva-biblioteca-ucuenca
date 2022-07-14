@@ -3,7 +3,7 @@
 // Luis González (luis.gonzaleza@ucuenca.edu.ec) 
 // Roger Aguirre (roger.aguirre@ucuenca.edu.ec)
 
-const intervalo = 5 // segundos
+const intervalo = 10 // segundos
 const credenciales = {
     username: "biblioteca@ucuenca.edu.ec",
     password: "biblioteca2020"
@@ -191,7 +191,6 @@ const loopCubiculos = async () => {
                     mostrarReservaciones(`${cubiculo.name}`, reservaciones)
                     const estado = mostrarInfoCubiculos(cubiculo, reservaciones)
                     document.getElementById(`nombre_cubiculo_${cubiculo.name}`).classList.add(`bg-${estado.toLowerCase()}`)
-                    console.log(intervalo_ms * index)
                 }
                     , intervalo_ms * (++index))
             }
